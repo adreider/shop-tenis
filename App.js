@@ -1,20 +1,45 @@
+import 'react-native-gesture-handler';
+import { useState, useEffect } from 'react';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import LottieView from 'lottie-react-native';
+import { Routes } from './src/routes/router';
+import LoadingSvg from './src/assets/lottie/lf30_editor_ujsvxmpt.json'
+import { useFonts, Anton_400Regular } from '@expo-google-fonts/anton';
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
-}
+  const [loop, setLoop] = useState(true);
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+  useEffect(
+    () => {
+      let timer = setTimeout(() => setLoop(false), 5000);
+      return () => {
+        clearTimeout(timer);
+      };
+    }, []);
+
+  let [fontsLoaded] = useFonts({
+    Anton_400Regular,
+  });
+
+  if (!fontsLoaded) {
+    return (
+      <>
+        <StatusBar barStyle='light-content' />
+        <LottieView
+          autoPlay
+          loop={loop}
+          source={LoadingSvg}
+          style={{ backgroundColor: "#fff" }}
+        />
+      </>
+    )
+  }
+
+  return (
+    <>
+      <StatusBar style="light" backgroundColor="#000" translucent={true} />
+      <Routes />
+    </>
+  );
+
+}
